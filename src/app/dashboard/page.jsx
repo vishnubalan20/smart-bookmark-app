@@ -9,9 +9,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [supabase, setSupabase] = useState(null);
 
-  // Initialize Supabase and user session on the client
+  // Initialize Supabase client in browser only
   useEffect(() => {
-    // Lazy-load Supabase client in browser
     const { createClient } = require("@supabase/supabase-js");
     const supabaseClient = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -21,13 +20,10 @@ export default function Dashboard() {
 
     const init = async () => {
       const { data } = await supabaseClient.auth.getSession();
-
-      // If no session, redirect to login page
       if (!data.session) {
         window.location.href = "/";
         return;
       }
-
       setUser(data.session.user);
       setLoading(false);
     };
@@ -35,7 +31,7 @@ export default function Dashboard() {
     init();
   }, []);
 
-  // Fetch bookmarks when user & supabase are ready
+  // Fetch bookmarks once user & supabase exist
   useEffect(() => {
     if (!user || !supabase) return;
 
@@ -56,7 +52,7 @@ export default function Dashboard() {
     fetchBookmarks();
   }, [user, supabase]);
 
-  // Add a bookmark
+  // Add bookmark
   const addBookmark = async () => {
     if (!title || !url || !user || !supabase) return;
 
@@ -76,7 +72,7 @@ export default function Dashboard() {
     setUrl("");
   };
 
-  // Delete a bookmark
+  // Delete bookmark
   const deleteBookmark = async (id) => {
     if (!supabase) return;
 
@@ -90,9 +86,7 @@ export default function Dashboard() {
   };
 
   if (loading)
-    return (
-      <div className="h-screen flex items-center justify-center">Loading...</div>
-    );
+    return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10">
