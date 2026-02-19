@@ -1,10 +1,8 @@
 "use client";
-
-import { getSupabaseClient } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function Home() {
   const login = async () => {
-    const supabase = getSupabaseClient(); // create client here
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -12,7 +10,6 @@ export default function Home() {
       },
     });
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center">
